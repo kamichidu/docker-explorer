@@ -1,0 +1,156 @@
+$header-height: 60px;
+$footer-height: 20px;
+$side-pane-width: 300px;
+
+html
+{
+    font-size: 62.5%;
+}
+
+body
+{
+    font-size: 1.4em;
+}
+
+header
+{
+    display: block;
+    position: fixed;
+    height: $header-height;
+    width: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 1px solid #000;
+
+    h1
+    {
+        position: relative;
+        font-size: 2.4rem;
+        float: left;
+        margin: 0;
+        height: 100%;
+        line-height: $header-height;
+    }
+
+    form
+    {
+        float: right;
+        display: block;
+        height: $header-height;
+
+        .form-group
+        {
+            height: 100%;
+            line-height: $header-height;
+        }
+
+        label
+        {
+            font-weight: bold;
+        }
+
+        input
+        {
+            border: 1px solid #000;
+            padding-left: 0.5rem;
+            width: 18rem;
+        }
+
+        button
+        {
+            border: 1px solid #000;
+        }
+    }
+}
+
+footer
+{
+    width: 100%;
+    height: $footer-height;
+    position: fixed;
+    bottom: 0;
+    text-align: right;
+    padding-right: 2rem;
+}
+
+.content
+{
+    margin-top: $header-height;
+    padding-bottom: $footer-height;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+}
+
+.side-pane
+{
+    float: left;
+    width: $side-pane-width;
+    height: 100%;
+    overflow: auto;
+    border-right: 1px solid #000;
+}
+
+@mixin tree-style
+{
+    padding-left: 1.5rem;
+    list-style-type: none;
+
+    .tree-item
+    {
+        cursor: pointer;
+    }
+
+    .tree-item:hover
+    {
+        background-color: #eee;
+    }
+
+    li.tree-item-expandable:before
+    {
+        content: 'つ'
+    }
+
+    li.tree-item-expanded:before
+    {
+        content: 'し'
+    }
+
+    li.tree-item-terminal:before
+    {
+        content: '・'
+    }
+}
+
+.tree-style
+{
+    @include tree-style
+
+    ul
+    {
+        @include tree-style
+
+        ul
+        {
+            @include tree-style
+
+            ul
+            {
+                @include tree-style
+            }
+        }
+    }
+}
+
+.main-pane
+{
+    height: auto;
+    width: 100%;
+    position: absolute;
+    margin-left: $side-pane-width;
+    padding-left: 1rem;
+    overflow: auto;
+}

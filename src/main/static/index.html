@@ -2,11 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280,initial-scale=1">
     <title>Docker Explorer</title>
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <link rel="stylesheet" href="vendor/css/sanitize.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <header>
+            <h1>Docker Explorer</h1>
 
-    <script src="./app.js"></script>
+            <form>
+                <div class="form-group">
+                    <label for="docker-host">Docker Host</label>
+                    <input id="docker-host" type="url" value="localhost:2375">
+                    <button>Apply</button>
+                </div>
+            </form>
+        </header>
+
+        <div class="content">
+            <div class="side-pane">
+                <ul class="tree-style">
+                    <li class="tree-item-expandable">
+                        <span class="tree-item">Swarm</span>
+                        <ul>
+                            <li class="tree-item-expandable">
+                                <span class="tree-item">Managers</span>
+                                <ul>
+                                    <li class="tree-item-expandable">
+                                        <span class="tree-item">Host1</span>
+                                        <ul>
+                                            <li class="tree-item-terminal">
+                                                <span class="tree-item">Container1</span>
+                                            </li>
+                                            <li class="tree-item-terminal">
+                                                <span class="tree-item">Container2</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="tree-item-expandable">
+                                        <span class="tree-item">Host2</span>
+                                        <ul>
+                                            <li class="tree-item-terminal">
+                                                <span class="tree-item">Container1</span>
+                                            </li>
+                                            <li class="tree-item-terminal">
+                                                <span class="tree-item">Container2</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="tree-item-expanded">
+                                <span class="tree-item">Workers</span>
+                                <ul>
+                                    <li class="tree-item-expandable">
+                                        <span class="tree-item">Host1</span>
+                                        <ul>
+                                            <li class="tree-item-terminal">
+                                                <span class="tree-item">Container1</span>
+                                            </li>
+                                            <li class="tree-item-terminal">
+                                                <span class="tree-item">Container2</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="tree-item-expandable">
+                                        <span class="tree-item">Host2</span>
+                                        <ul>
+                                            <li class="tree-item-expandable">
+                                                <span class="tree-item">Container1</span>
+                                            </li>
+                                            <li class="tree-item-expandable">
+                                                <span class="tree-item">Container2</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="main-pane">
+                <div>
+                    <h3>Host Metrics</h3>
+
+                    ...ホストの各種メトリクス...
+                </div>
+                <div>
+                    <h3>Container Metrics</h3>
+
+                    ...コンテナの各種メトリクス...
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; kamichidu
+        </footer>
+    </div>
+
+    <script src="assets/js/app.js"></script>
 </body>
 </html>
