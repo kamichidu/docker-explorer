@@ -14,8 +14,14 @@ export default {
     ],
     module: {
         loaders: [
-            { test: /\.js$/, loaders: ['babel'], exclude: /node_modules/ },
+            { test: /\.js$/,  loaders: ['babel'], exclude: /node_modules/ },
+            { test: /\.vue$/, loaders: ['vue'] },
         ],
+    },
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.js',
+        },
     },
     devtool: '#source-map',
 };
