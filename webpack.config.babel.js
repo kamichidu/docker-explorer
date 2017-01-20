@@ -6,7 +6,7 @@ export default {
         'app': path.join(__dirname, 'src', 'main', 'js', 'app.js'),
     },
     output: {
-        path: path.join(__dirname, 'dist', 'assets', 'js'),
+        path: path.join(__dirname, 'docs', 'assets', 'js'),
         filename: '[name].js',
     },
     plugins: [
