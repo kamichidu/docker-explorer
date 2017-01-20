@@ -11,7 +11,7 @@
 <body>
     <div id="app">
         <x-header></x-header>
-        <x-content></x-content>
+        <x-content v-bind:hosts="hosts" v-bind:containers="containers"></x-content>
         <x-footer></x-footer>
     </div>
 

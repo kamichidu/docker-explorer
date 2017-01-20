@@ -35,6 +35,13 @@ header
         line-height: $header-height;
     }
 
+    h2
+    {
+        float: left;
+        font-size: 1.4rem;
+        margin-left: 0.5rem;
+    }
+
     form
     {
         float: right;
@@ -152,5 +159,24 @@ footer
     position: absolute;
     margin-left: $side-pane-width;
     padding-left: 1rem;
-    overflow: auto;
+
+    .scroller
+    {
+        position: relative;
+        overflow-y: scroll;
+        max-height: 100vh;
+    }
+
+    .container
+    {
+        position: relative;
+        float: left;
+        width: 100%;
+    }
+}
+
+.metrics-graph
+{
+    float: left;
+    min-width: 500px;
 }

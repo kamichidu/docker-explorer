@@ -7,7 +7,7 @@
     "watch:webpack": "webpack --watch",
     "watch": "npm-run-all --parallel watch:gulp watch:webpack",
     "build": "gulp",
-    "serve": "http-server -c-1 ./dist/"
+    "serve": "http-server -c-1 --proxy http://localhost:2375/ ./dist/"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
@@ -25,6 +25,7 @@
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
+    "chart.js": "^2.4.0",
     "moment": "^2.17.1",
     "rx": "^4.1.0",
     "sanitize.css": "^4.1.0",
