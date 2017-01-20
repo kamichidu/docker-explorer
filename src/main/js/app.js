@@ -85,18 +85,31 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     });
 
-    const datasets= [];
+    const cpuDatasets= [];
     App.view.containers.push({
         title: 'CPU Utilization',
         data: {
-            datasets: datasets,
+            datasets: cpuDatasets,
         },
     });
-    // App.view.$watch('containers', (newVal, oldVal) => chart.update(), { deep: true });
+    const memoryPercentDatasets= [];
+    App.view.containers.push({
+        title: 'Memory Utilization',
+        data: {
+            datasets: memoryPercentDatasets,
+        },
+    });
+    const memoryUsageDatasets= [];
+    App.view.containers.push({
+        title: 'Memory Usage',
+        data: {
+            datasets: memoryUsageDatasets,
+        },
+    });
 
     const createStatStream= () => {
         const docker= new Docker('http://localhost:8080');
-        return Rx.Observable.interval(10000)
+        return Rx.Observable.interval(3000)
             .merge(Rx.Observable.just())
             // コンテナ一覧の取得
             .flatMap(() => Rx.Observable.fromPromise(docker.containers()))
@@ -107,51 +120,100 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const createCpuStream= (statStream) => {
-        let memo= {
-            cpu: 0,
-            system: 0,
-        };
         const subject= new Rx.Subject();
         statStream.subscribe(stat => {
-            // https://github.com/docker/docker/blob/master/api/client/container/stats_helpers.go#L203-L216
+            // See github.com/docker/docker/cli/command/container/stats_helpers.go
+            // currently, support only linux containers
             const cpu= stat.cpu_stats.cpu_usage.total_usage;
             const system= stat.cpu_stats.system_cpu_usage;
-            const cpuDelta= cpu - memo.cpu;
-            const systemDelta= system - memo.system;
+            const precpu= stat.precpu_stats.cpu_usage.total_usage;
+            const presystem= stat.precpu_stats.system_cpu_usage;
+
+            const cpuDelta= cpu - precpu;
+            const systemDelta= system - presystem;
 
             if(cpuDelta > 0.0 && systemDelta > 0.0)
             {
-                const cpuPercent= ((1.0 * cpuDelta) / systemDelta) * stat.cpu_stats.cpu_usage.percpu_usage.length * 100.0;
+                const cpuPercent= (cpuDelta / systemDelta) * stat.cpu_stats.cpu_usage.percpu_usage.length * 100.0;
                 subject.onNext({
                     id: stat.id,
+                    name: stat.name,
                     // unix timestamp
                     timestamp: moment(stat.read).unix(),
                     cpuPercent: cpuPercent,
                 });
             }
+        });
+        return subject.asObservable();
+    };
 
-            memo.cpu= cpu;
-            memo.system= system;
+    const createMemoryStream= (statStream) => {
+        const subject= new Rx.Subject();
+        statStream.subscribe(stat => {
+            subject.onNext({
+                id: stat.id,
+                name: stat.name,
+                // unix timestamp
+                timestamp: moment(stat.read).unix(),
+                memoryPercent: stat.memory_stats.limit > 0
+                    ? stat.memory_stats.usage / stat.memory_stats.limit * 100.0
+                    : 0,
+                memoryUsage: stat.memory_stats.usage,
+                memoryLimit: stat.memory_stats.limit,
+            });
         });
         return subject.asObservable();
     };
 
     const statStream= createStatStream();
     const cpuStream= createCpuStream(statStream);
+    const memoryStream= createMemoryStream(statStream);
     cpuStream.subscribe(usage => {
-        let dataset= datasets.find((dataset) => dataset.label === usage.id);
+        let dataset= cpuDatasets.find((dataset) => dataset.label === usage.name);
         if(!dataset)
         {
             dataset= {
-                label: usage.id,
+                label: usage.name,
                 data: [],
             };
-            datasets.push(dataset);
+            cpuDatasets.push(dataset);
         }
 
         dataset.data.push({
             x: usage.timestamp,
             y: usage.cpuPercent,
+        });
+    });
+    memoryStream.subscribe(usage => {
+        let dataset= memoryPercentDatasets.find((dataset) => dataset.label === usage.name);
+        if(!dataset)
+        {
+            dataset= {
+                label: usage.name,
+                data: [],
+            };
+            memoryPercentDatasets.push(dataset);
+        }
+
+        dataset.data.push({
+            x: usage.timestamp,
+            y: usage.memoryPercent,
+        });
+    });
+    memoryStream.subscribe(usage => {
+        let dataset= memoryUsageDatasets.find((dataset) => dataset.label === usage.name);
+        if(!dataset)
+        {
+            dataset= {
+                label: usage.name,
+                data: [],
+            };
+            memoryUsageDatasets.push(dataset);
+        }
+
+        dataset.data.push({
+            x: usage.timestamp,
+            y: usage.memoryUsage,
         });
     });
 });
