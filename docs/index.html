@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280,initial-scale=1">
+    <title>Docker Explorer</title>
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <link rel="stylesheet" href="vendor/css/sanitize.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div id="app">
+        <x-header></x-header>
+        <x-content v-bind:hosts="hosts" v-bind:containers="containers"></x-content>
+        <x-footer></x-footer>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
